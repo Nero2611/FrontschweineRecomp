@@ -1,0 +1,22 @@
+format_version = 5
+id = "frontschweine.enhancement.ntsc-60hz"
+version = "1.0.0"
+name = "60 Hz Mode (P/N Selector)"
+author = "FrontschweineRecomp"
+description = "Runs the game at 60 Hz like the PAL/NTSC selector patch of 2000: battles at 30 instead of 25 fps, and everything 20% faster."
+resolver = "declarative"
+save_compatibility = "shared"
+
+[[target]]
+game_id = "SLES-02767"
+
+[[feature]]
+id = "ntsc-60hz"
+name = "60 Hz Mode (P/N Selector)"
+description = "Enabled by default. Switches the console to 60 Hz the way the classic selector patch did. The game keeps counting time the PAL way, so at 60 Hz it runs 20% faster: battles at 30 fps, movement, animations and the turn clock 20% quicker. Speech, music and movies keep their speed. Unlike the patch, the full PAL picture stays visible."
+group = "Gameplay"
+default_enabled = true
+
+[[plugin]]
+feature = "ntsc-60hz"
+id = "frontschweine.ntsc-60hz"

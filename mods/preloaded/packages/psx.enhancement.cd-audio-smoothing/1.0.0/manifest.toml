@@ -1,0 +1,39 @@
+# Frontschweine override of the framework builtin with the same id and
+# version (the title's catalog copy wins): identical feature, but enabled
+# by default because the port is tuned and tested with it on.
+format_version = 5
+id = "psx.enhancement.cd-audio-smoothing"
+version = "1.0.0"
+name = "CD Audio Smoothing"
+author = "psxrecomp"
+description = "Removes the click at the start of each new CD audio stream (FMV soundtrack, XA speech, CD music). Each stream starts with an empty CD input buffer, so one late sector briefly starves it; real hardware and accurate emulators click there too."
+resolver = "declarative"
+save_compatibility = "shared"
+
+# CD audio buffering is a property of the emulated hardware, not of any
+# particular disc, so this ships with the framework and applies to every game.
+[[target]]
+game_id = "*"
+
+[[feature]]
+id = "cd-audio-smoothing"
+name = "CD Audio Smoothing"
+description = "Enabled by default for Frontschweine. Holds CD audio back for a fixed time after it starts arriving, so the buffer stays ahead of playback even when whole XA sectors arrive late; if it still runs dry, the sound fades out and fades back in instead of cutting. Delays each stream by about the prebuffer time. Not hardware-faithful: games that read the SPU capture buffers see the CD audio slightly later."
+group = "Audio"
+default_enabled = true
+
+[[option]]
+feature = "cd-audio-smoothing"
+id = "prebuffer_ms"
+label = "Prebuffer (ms)"
+description = "How long CD audio is held back after it starts arriving. 100 absorbs late XA sectors in speech-heavy scenes; 0 keeps stock timing and only fades a dry buffer in and out."
+group = "Audio"
+type = "integer"
+min = 0
+max = 250
+step = 10
+default = 100
+
+[[plugin]]
+feature = "cd-audio-smoothing"
+id = "psx.cd-audio-smoothing"

@@ -1,0 +1,37 @@
+format_version = 5
+id = "frontschweine.presentation.widescreen"
+version = "1.0.0"
+name = "Widescreen"
+author = "FrontschweineRecomp"
+description = "Widens the 3D field of view and presents the game at a wide aspect ratio. Experimental: objects can still disappear early at the screen edges, and 2D elements may look stretched."
+resolver = "declarative"
+save_compatibility = "shared"
+
+[[target]]
+game_id = "SLES-02767"
+
+[[feature]]
+id = "widescreen"
+name = "Widescreen"
+description = "Squashes the GTE projection so the 3D world shows a wider view, then presents it at the selected aspect ratio. FMVs and the boot logos stay 4:3."
+group = "Visual"
+default_enabled = true
+
+[[option]]
+feature = "widescreen"
+id = "aspect"
+label = "Aspect ratio"
+type = "choice"
+default = "16:9"
+
+[[option.choice]]
+value = "16:9"
+label = "16:9"
+
+[[option.choice]]
+value = "21:9"
+label = "21:9 (Ultrawide)"
+
+[[plugin]]
+feature = "widescreen"
+id = "frontschweine.widescreen"

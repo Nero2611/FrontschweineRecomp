@@ -1,0 +1,116 @@
+# Autofilled by tools/new_project_layout/probe_disc.py from your legal dump.
+# Review before shipping. Runtime quirks / overlay seeds still need hand work.
+
+[game]
+name = "Frontschweine"
+id = "SLES-02767"
+players = 2
+exe = "disc/SLES_027.67"
+disc = "disc/Frontschweine (Germany).cue"
+load_address = "0x80010000"
+entry_pc = "0x800178CC"
+text_size = "0x000E7800"
+stack_base = "0x801FFFF0"
+
+# Digests are for data Track 01 (first BINARY FILE / TRACK 01).
+[prepare_disc]
+out_dir = "disc"
+bin_name = "Frontschweine (Germany) (Track 1).bin"
+cue_name = "Frontschweine (Germany).cue"
+boot_exe = "SLES_027.67"
+known_sizes = [391706784]
+known_md5 = [
+  "a833706e9f28020cc665b9f1d5148f74",
+]
+known_sha1 = [
+  "ba85ec068293da37cdc261c2b77143dfb2057774",
+]
+known_crc32 = [
+  "7851c488",
+]
+
+[recompiler]
+seeds = "seeds/ghidra_funcs.txt"
+out_dir = "generated"
+strict = true
+# Taken over by game mods: the CD file library (Open, ReadAt, Load) by
+# Instant Loading (mods/plugins/instant_loading.c); libetc's v_wait and the
+# movie player's StGetNext polling by the CPU overclock
+# (mods/plugins/busy_waits.c); libgpu's GetVideoMode by the 60 Hz mode
+# (mods/plugins/ntsc_60hz.c); the battle module's terrain line walk, which
+# the enemy AI calls while it thinks, by Fast Enemy AI
+# (mods/plugins/terrain_line.c).
+mod_function_entry_funcs = ["0x80016A78", "0x80016BD0", "0x80016D9C", "0x8001DA54",
+                            "0x800238A0", "0x8001E30C", "0x8006AD70"]
+
+[runtime]
+window_title = "Frontschweine Recompiled"
+memcard_dir = "saves"
+overlay_cache = true
+# The game loads code at runtime into its own boot EXE text: the FMV player
+# at 0x8005B680..0x8005CAA4 and, during battles, modules over 0x80030000..
+# 0x8005B000 (pages 0x30000 and 0x3D000-0x43000 diverge from the disc image;
+# the hottest interpreted pages were 0x43000-0x52000). It also patches the
+# immediate of its own jump-table dispatcher at 0x800190C8. Treat text from
+# 0x18000 upward as overlay region so the autocompiled native shards can own
+# it instead of the dirty-RAM interpreter.
+overlay_region_floor = "0x18000"
+
+# Entry points for runtime-loaded code that the overlay capture records too
+# rarely as executed, so autocompile never gave them native entries. They are
+# the hottest interpreted PCs during in-battle stutters (each burst ran
+# 2-3M interpreted instructions per 100 ms): a sprite/text copy loop at
+# 0x800671B8, the jump-table dispatcher at 0x800190D8, and module code at
+# 0x8005D000-0x80083D88. No load_addr/bytes_crc: the modules reload with
+# varying layouts, and byte guards select the matching shard at runtime.
+[[overlays]]
+entries = ["0x800190D8", "0x8004FB48", "0x80052000", "0x80052938", "0x8005D5DC",
+           "0x8005E0A8", "0x8005E4CC", "0x8005F11C", "0x8005F970",
+           "0x80060010", "0x80060694", "0x800607A4", "0x80060FA0", "0x80061A8C",
+           "0x800654A4", "0x80065570", "0x800671B8", "0x80070AF8", "0x80083D88",
+           "0x800E09E8", "0x800E83BC"]
+
+# Profile-guided optimization for `psxrecomp_cli.py rebuild`: measured
+# 10-20% more host headroom, which the CPU overclock needs.
+[pgo]
+enabled = true
+
+# Widescreen is mod-owned (frontschweine.presentation.widescreen). Use the
+# GTE X-squash + stretched present: native-wide needs the game's screen-space
+# rejects widened first, which is not done for this title yet.
+[widescreen]
+native_wide = false
+# Gameplay = the main-loop state handler at 0x8002AA50 points at the battle
+# loop 0x80042768 (menus hold 0, 2 or a menu handler). Menus render 3D pig
+# models too, so GTE activity alone flickered between 4:3 and 16:9 there.
+gameplay_state_addr = "0x8002AA50"
+gameplay_state_values = ["0x80042768"]
+# Also keeps the 2D-only-scene classifier off: battles are always 3D worlds.
+gte_game_mode = true
+# Keep screen-space HUD/text (untagged SPRTs) at native proportions.
+hud_sprt_squash = true
+auto_ui_squash = true
+# Fixed HUD = the frontmost 26 ordering-table ranks (front: dial, clock, bars,
+# messages; front-4..-25: minimap and its markers; world never closer than
+# front-47 in the sampled battles). Present it at its exact 4:3 position.
+# Floating name tags share the front rank and follow their pig instead:
+# 11 px tall name/health glyph rects and the 43x22 direction arrows.
+hud43_rank_band = 25
+hud43_keep = [
+  { op = "0x64", height = 11 },
+  { op = "0x2C", width = 43, height = 22 },
+]
+
+[video]
+renderer = "opengl"
+aspect_ratio = "4:3"
+
+[controller]
+default_mode = "digital"
+
+# Online mount gate: digests + track count + optional TOC fingerprint
+# (see docs/NETPLAY.md).
+[netplay]
+require_cue = true
+required_tracks = 3
+required_disc_fp = "786e7c432ebe33e11874607ffccbef1b8c3adc56d41799388b53cfa23b8a206a"

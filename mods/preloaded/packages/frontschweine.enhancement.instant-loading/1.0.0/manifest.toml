@@ -1,0 +1,22 @@
+format_version = 5
+id = "frontschweine.enhancement.instant-loading"
+version = "1.0.0"
+name = "Instant Loading"
+author = "FrontschweineRecomp"
+description = "Loads game files straight from an extracted copy of the disc instead of through the emulated CD drive, so loading screens are gone. Speech, music and cutscenes keep streaming from the emulated drive."
+resolver = "declarative"
+save_compatibility = "shared"
+
+[[target]]
+game_id = "SLES-02767"
+
+[[feature]]
+id = "instant-loading"
+name = "Instant Loading"
+description = "Copies each data file the game requests from extracted/ next to the program (filled from your disc on first use) directly into memory. The game itself keeps its normal speed; only the wait for the drive disappears."
+group = "Quality of Life"
+default_enabled = true
+
+[[plugin]]
+feature = "instant-loading"
+id = "frontschweine.instant-loading"

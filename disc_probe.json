@@ -1,0 +1,29 @@
+{
+  "cue_path": "disc/Frontschweine (Germany).cue",
+  "cue_name": "Frontschweine (Germany).cue",
+  "bin_name": "Frontschweine (Germany) (Track 1).bin",
+  "track_count": 3,
+  "data_track_size": 391706784,
+  "data_track_md5": "a833706e9f28020cc665b9f1d5148f74",
+  "data_track_sha1": "ba85ec068293da37cdc261c2b77143dfb2057774",
+  "data_track_crc32": "7851c488",
+  "boot_exe": "SLES_027.67",
+  "serial": "SLES-02767",
+  "serial_exe": "SLES_027.67",
+  "volume_id": "",
+  "display_name": "Frontschweine",
+  "load_address": "0x80010000",
+  "entry_pc": "0x800178CC",
+  "text_size": "0x000E7800",
+  "stack_base": "0x801FFFF0",
+  "require_cue": true,
+  "required_disc_fp": "786e7c432ebe33e11874607ffccbef1b8c3adc56d41799388b53cfa23b8a206a",
+  "boot_exe_sha256": "05a6c398b17763980b9179ad20593650555f77bbef234ed0a9a48eaf649a52a3",
+  "seed_count": 264,
+  "warnings": [],
+  "notes": [
+    "entry_pc/load_address/text_size/stack_base taken from PS-X EXE header.",
+    "seeds are first-pass boot-EXE JAL targets (+ entry); expect to grow as overlays / runtime paths are discovered.",
+    "required_disc_fp is psxrecomp-toc-v1 (matches runtime DiscIdentity)."
+  ]
+}

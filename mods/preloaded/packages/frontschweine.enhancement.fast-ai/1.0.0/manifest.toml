@@ -1,0 +1,22 @@
+format_version = 5
+id = "frontschweine.enhancement.fast-ai"
+version = "1.0.0"
+name = "Fast Enemy AI"
+author = "FrontschweineRecomp"
+description = "Runs the enemy AI's terrain line checks as native code, so the picture no longer freezes while a computer-controlled hog thinks."
+resolver = "declarative"
+save_compatibility = "shared"
+
+[[target]]
+game_id = "SLES-02767"
+
+[[feature]]
+id = "fast-ai"
+name = "Fast Enemy AI"
+description = "The AI rates every move and target by walking a line across the battlefield in tiny steps, which held the picture for up to a quarter of a second per decision. The same walk now runs natively with identical results, so the AI decides the same way, just without the freeze."
+group = "Performance"
+default_enabled = true
+
+[[plugin]]
+feature = "fast-ai"
+id = "frontschweine.terrain-line"
